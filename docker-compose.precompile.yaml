@@ -1,0 +1,4 @@
+services:
+  rails:
+    mem_limit: 4g
+    memswap_limit: 4g
