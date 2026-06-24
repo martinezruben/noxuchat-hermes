@@ -1,7 +1,7 @@
-# Chatwoot v4.15.1 — Contexto Comprimido
+# NoxuChat v4.15.1 — Contexto Comprimido
 
 ## TL;DR
-**Chatwoot** es una plataforma de customer engagement multi-canal. Este es un fork privado (`noxuchat-hermes`) desplegado en Windows 11 con WSL2 + Docker.
+**NoxuChat** es una plataforma de customer engagement multi-canal basada en Chatwoot. Este es un fork privado (`noxuchat-hermes`) desplegado en Windows 11 con WSL2 + Docker.
 
 ---
 

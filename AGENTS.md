@@ -1,4 +1,4 @@
-# Chatwoot Development Guidelines
+# NoxuChat Development Guidelines
 
 ## Build / Test / Lint
 

@@ -4,7 +4,7 @@
 > parcheado y desplegado sobre **WSL2 + Docker Engine** en Windows 11.
 > Gestionado íntegramente vía [Hermes Agent](https://hermes-agent.nousresearch.com).
 
-> ⚠️ Este NO es un fork oficial de Chatwoot. Es una copia de trabajo personalizada.
+> ⚠️ Este NO es un fork oficial de Chatwoot. NoxuChat es una copia de trabajo personalizada basada en Chatwoot.
 > Para upstream/issues originales: https://github.com/chatwoot/chatwoot/issues
 
 ---
