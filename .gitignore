@@ -25,6 +25,7 @@ coverage/
 public/assets/
 public/packs/
 public/vite/
+public/vite-dev/
 public/sw.js.map
 
 # IDEs / OS
@@ -51,3 +52,5 @@ vendor/db/*.onnx
 
 # GitHub workflows (no aplican a este fork privado)
 .github/workflows/
+
+.pnpm-store/

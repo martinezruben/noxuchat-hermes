@@ -1,9 +1,11 @@
 <script setup>
 import { h, ref, computed, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { provideSidebarContext, useSidebarResize } from './provider';
 import { useAccount } from 'dashboard/composables/useAccount';
 import { useKbd } from 'dashboard/composables/utils/useKbd';
 import { useMapGetter } from 'dashboard/composables/store';
+import { usePolicy } from 'dashboard/composables/usePolicy';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { useSidebarKeyboardShortcuts } from './useSidebarKeyboardShortcuts';
@@ -44,8 +46,52 @@ const emit = defineEmits([
 
 const { accountScopedRoute, isOnChatwootCloud } = useAccount();
 const store = useStore();
+const router = useRouter();
+const { checkPermissions } = usePolicy();
 const searchShortcut = useKbd([`$mod`, 'k']);
 const { t } = useI18n();
+
+// Menu visibility must mirror the access already enforced by the route
+// guards (`meta.permissions`), otherwise users with a custom role see
+// links to pages they get redirected away from.
+const isRouteAccessible = routeLocation => {
+  if (!routeLocation?.name) return true;
+  const requiredPermissions = router.resolve(routeLocation)?.meta?.permissions;
+  if (!requiredPermissions?.length) return true;
+  return checkPermissions(requiredPermissions);
+};
+
+// Within a group, children either share the same permission requirement
+// (Conversation, Captain, Contacts, Companies, Reports, Campaigns, Portals)
+// or vary per child (Settings). For the uniform case, checking the first
+// statically defined child is enough; Settings is filtered child-by-child
+// below instead.
+const filterAccessibleMenuItems = items =>
+  items
+    .map(item => {
+      if (item.to) {
+        return isRouteAccessible(item.to) ? item : null;
+      }
+
+      if (item.name === 'Settings' && item.children) {
+        const accessibleChildren = item.children.filter(child =>
+          isRouteAccessible(child.to)
+        );
+        return accessibleChildren.length
+          ? { ...item, children: accessibleChildren }
+          : null;
+      }
+
+      if (item.children?.length) {
+        const representative = item.children.find(child => child.to);
+        if (representative && !isRouteAccessible(representative.to)) {
+          return null;
+        }
+      }
+
+      return item;
+    })
+    .filter(Boolean);
 
 const isACustomBrandedInstance = useMapGetter(
   'globalConfig/isACustomBrandedInstance'
@@ -845,6 +891,10 @@ const menuItems = computed(() => {
     },
   ];
 });
+
+const accessibleMenuItems = computed(() =>
+  filterAccessibleMenuItems(menuItems.value)
+);
 </script>
 
 <template>
@@ -952,7 +1002,7 @@ const menuItems = computed(() => {
         :class="{ 'items-center': isEffectivelyCollapsed }"
       >
         <SidebarGroup
-          v-for="item in menuItems"
+          v-for="item in accessibleMenuItems"
           :key="item.name"
           v-bind="item"
         />
