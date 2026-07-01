@@ -42,6 +42,7 @@ export default {
     return {
       isEditing: false,
       editedValue: null,
+      isUploading: false,
     };
   },
   computed: {
@@ -83,6 +84,9 @@ export default {
     isAttributeTypeDate() {
       return this.attributeType === 'date';
     },
+    isAttributeTypeFile() {
+      return this.attributeType === 'file';
+    },
     hasValue() {
       return this.value !== null && this.value !== '';
     },
@@ -92,8 +96,22 @@ export default {
     hrefURL() {
       return isValidURL(this.value) ? this.value : '';
     },
+    fileDisplayName() {
+      if (!this.value) return '';
+      try {
+        const parsedUrl = new URL(this.value);
+        const parts = parsedUrl.pathname.split('/');
+        return decodeURIComponent(parts[parts.length - 1]) || 'file';
+      } catch {
+        return this.value;
+      }
+    },
     notAttributeTypeCheckboxAndList() {
-      return !this.isAttributeTypeCheckbox && !this.isAttributeTypeList;
+      return (
+        !this.isAttributeTypeCheckbox &&
+        !this.isAttributeTypeList &&
+        !this.isAttributeTypeFile
+      );
     },
     inputType() {
       return this.isAttributeTypeLink ? 'url' : this.attributeType;
@@ -198,6 +216,38 @@ export default {
     },
     onCopy() {
       this.$emit('copy', this.value);
+    },
+    triggerFileInput() {
+      this.$refs.fileInput?.click();
+    },
+    async handleFileChange(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      this.isUploading = true;
+      try {
+        const accountId = this.$store.getters.getCurrentAccountId;
+        const currentUser = this.$store.getters.getCurrentUser;
+
+        const formData = new FormData();
+        formData.append('attachment', file);
+
+        const response = await fetch(`/api/v1/accounts/${accountId}/upload`, {
+          method: 'POST',
+          headers: { api_access_token: currentUser.access_token },
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error('Upload failed');
+
+        const data = await response.json();
+        this.$emit('update', this.attributeKey, data.file_url);
+      } catch {
+        // noop — caller handles alerts
+      } finally {
+        this.isUploading = false;
+        if (this.$refs.fileInput) this.$refs.fileInput.value = '';
+      }
     },
   },
 };
@@ -334,6 +384,51 @@ export default {
         "
         @select="onUpdateListValue"
       />
+    </div>
+
+    <div v-if="isAttributeTypeFile">
+      <input
+        ref="fileInput"
+        type="file"
+        class="hidden"
+        @change="handleFileChange"
+      />
+      <div v-if="!isUploading" class="flex items-center gap-2 flex-wrap">
+        <a
+          v-if="hasValue"
+          :href="value"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm text-n-blue-11 hover:underline break-all"
+        >
+          <span
+            class="i-lucide-paperclip ltr:mr-1 rtl:ml-1 inline-block align-middle"
+          />
+          {{ fileDisplayName }}
+        </a>
+        <span v-else class="text-sm text-n-slate-10">{{ displayValue }}</span>
+        <NextButton
+          v-if="showActions"
+          xs
+          slate
+          ghost
+          icon="i-lucide-upload"
+          :label="$t('CUSTOM_ATTRIBUTES.FORM.ATTRIBUTE_TYPE.FILE.UPLOAD')"
+          @click="triggerFileInput"
+        />
+        <NextButton
+          v-if="showActions && hasValue"
+          v-tooltip="$t('CUSTOM_ATTRIBUTES.ACTIONS.DELETE')"
+          xs
+          slate
+          ghost
+          icon="i-lucide-trash-2"
+          @click="onDelete"
+        />
+      </div>
+      <span v-else class="text-sm text-n-slate-10">
+        {{ $t('CUSTOM_ATTRIBUTES.FORM.ATTRIBUTE_TYPE.FILE.UPLOADING') }}
+      </span>
     </div>
   </div>
 </template>

@@ -47,6 +47,8 @@ export const getCustomAttributeInputType = key => {
       return 'searchSelect';
     case 'checkbox':
       return 'booleanSelect';
+    case 'file':
+      return 'plainText';
     default:
       return 'plainText';
   }

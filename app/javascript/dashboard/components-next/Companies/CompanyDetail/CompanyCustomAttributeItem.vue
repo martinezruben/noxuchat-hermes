@@ -8,6 +8,7 @@ import ListAttribute from 'dashboard/components-next/CustomAttributes/ListAttrib
 import CheckboxAttribute from 'dashboard/components-next/CustomAttributes/CheckboxAttribute.vue';
 import DateAttribute from 'dashboard/components-next/CustomAttributes/DateAttribute.vue';
 import OtherAttribute from 'dashboard/components-next/CustomAttributes/OtherAttribute.vue';
+import FileAttribute from 'dashboard/components-next/CustomAttributes/FileAttribute.vue';
 
 const props = defineProps({
   companyId: {
@@ -63,6 +64,7 @@ const componentMap = {
   list: ListAttribute,
   checkbox: CheckboxAttribute,
   date: DateAttribute,
+  file: FileAttribute,
   default: OtherAttribute,
 };
 

@@ -248,6 +248,10 @@
           "PLACEHOLDER": "Select value",
           "SEARCH_INPUT_PLACEHOLDER": "Search value",
           "NO_RESULT": "No result found"
+        },
+        "FILE": {
+          "UPLOAD": "Upload file",
+          "UPLOADING": "Uploading..."
         }
       }
     },
@@ -526,6 +530,10 @@
         "TRIGGER": {
           "SELECT": "Select value",
           "INPUT": "Enter value"
+        },
+        "FILE": {
+          "UPLOADING": "Uploading...",
+          "UPLOAD": "Upload file"
         },
         "VALIDATIONS": {
           "INVALID_NUMBER": "Invalid number",
