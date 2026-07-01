@@ -1,0 +1,12 @@
+FROM chatwoot/chatwoot:latest
+
+# 1) Patch the failing migration
+COPY 20231211010807_add_cached_labels_list.rb /app/db/migrate/20231211010807_add_cached_labels_list.rb
+
+# 2) Install pnpm at the exact version Chatwoot requires
+COPY pnpm /usr/local/bin/pnpm
+RUN chmod +x /usr/local/bin/pnpm
+
+# 3) Give Node/vite enough heap to compile 4675 modules on a 7.6 GB host.
+#    Without this, vite dies with "Reached heap limit Allocation failed".
+ENV NODE_OPTIONS=--max-old-space-size=3072

@@ -102,11 +102,11 @@
   enabled: false
 - name: audit_logs
   display_name: Audit Logs
-  enabled: false
+  enabled: true
   premium: true
 - name: custom_tools
   display_name: Custom Tools
-  enabled: false
+  enabled: true
   premium: true
 - name: message_reply_to
   display_name: Message Reply To
@@ -122,7 +122,7 @@
   chatwoot_internal: true
 - name: sla
   display_name: SLA
-  enabled: false
+  enabled: true
   premium: true
   help_url: https://chwt.app/hc/sla
 - name: help_center_embedding_search
@@ -135,11 +135,11 @@
   enabled: false
 - name: captain_integration
   display_name: Captain
-  enabled: false
+  enabled: true
   premium: true
 - name: custom_roles
   display_name: Custom Roles
-  enabled: false
+  enabled: true
   premium: true
 - name: chatwoot_v4
   display_name: Chatwoot V4
@@ -176,7 +176,7 @@
   enabled: false
 - name: captain_integration_v2
   display_name: Captain V2
-  enabled: false
+  enabled: true
   premium: true
 - name: whatsapp_embedded_signup
   display_name: WhatsApp Embedded Signup
@@ -194,7 +194,7 @@
   enabled: true
 - name: captain_document_auto_sync
   display_name: Captain Document Auto Sync
-  enabled: false
+  enabled: true
   premium: true
 - name: advanced_search
   display_name: Advanced Search
@@ -221,7 +221,7 @@
   deprecated: true
 - name: companies
   display_name: Companies
-  enabled: false
+  enabled: true
   premium: true
 - name: channel_tiktok
   display_name: TikTok Channel
